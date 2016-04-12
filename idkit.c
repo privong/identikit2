@@ -48,6 +48,7 @@ string defv[] = {		";Fit Identakit model to XYVz data.",
     "initview=",		";Initial view file",
     "saveview=idk%03d.dat",	";Output pattern for view files",
     "saveimage=idk%03d.ppm",	";Output pattern for screen dump",
+    "savemake=idk%03d.make",	";Output pattern for zeno makefile generation",
     "spindepth=4",		";Tessellation depth for spin ball",
     "viewdepth=2",		";Tessellation depth for view search",
     "xwidth=250.0",		";Image X,Y width in kpc",
@@ -233,6 +234,7 @@ bool centbbox(real xmin[2], real xmax[2], real ymin[2], real ymax[2],
 	      GLubyte *img, int size);
 void buildsphere(int lev);
 void buildtriangle(vector v1, vector v2, vector v3, int lev);
+void writemake();
 
 //  __________________
 //  Macro definitions.
@@ -1025,6 +1027,9 @@ void keyboard(unsigned char key, int x, int y)
     case 'S':
       printscale();
       break;
+    case ';':
+      writemake();
+      break;
     case 033:
     case '$':
       exit(0);
@@ -1073,6 +1078,7 @@ void printhelp(void)
   eprintf("  M\tfind maxima on view or product ball\n");
   eprintf("  w\tsave view parameters to file\n");
   eprintf("  W\tsave current display to file\n");
+  eprintf("  ;\twrite makefile for current parameters\n");
   eprintf("  d\ttoggle display of parameters\n");
   eprintf("  C\ttoggle display of data cube\n");
   eprintf("  Z\ttoggle zoom on XY, XV, or VY panel\n");
@@ -1951,4 +1957,71 @@ void buildtriangle(vector v1, vector v2, vector v3, int lev)
     buildtriangle(v2, v4, v5, lev - 1);
     buildtriangle(v3, v5, v6, lev - 1);
   }
+}
+
+//  ___________________________________________________
+//  writemake: generate a zeno makefile
+
+void writemake()
+{
+  static int nmake=1;
+  char namebuf[256];
+  char id[10];
+  struct stat statbuf;
+  char *count, alpha;
+  float rperi;
+  stream ostr;
+  vector spin1, spin2;
+
+  if (strchr(getparam("savemake"), '%') != NULL) {	// embedded format?
+    do {
+      sprintf(namebuf, getparam("savemake"), nmake++);	// make a file name
+      sprintf(id,"%03d",nmake-1);
+    } while (stat(namebuf, &statbuf) == 0);		// while it exists
+  } else {
+    sprintf(namebuf,"%s",getparam("savemake"));
+    sprintf(id,"%s",getparam("savemake"));
+  }
+  sprintf(msgbuf, "#y%swriting makefile %s",
+	(stat(namebuf, &statbuf) == 0 ? "over" : ""), namebuf);
+  sprintf(msgbuf, "#y%swriting makefile %s", 
+	(stat(namebuf, &statbuf) == 0 ? "over" : ""), namebuf);
+  ostr=stropen(namebuf, "w!");
+  fprintf(ostr,"# Identikit generated makefile for self-consistent simulation\n");
+  fprintf(ostr,"# \n");
+  fprintf(ostr,"# to run:\n");
+  fprintf(ostr,"#\tmkdir ir%s\n",id);
+  fprintf(ostr,"#\tmake -f %s ir%s/i%s.dat\n",namebuf,id,id);
+  fprintf(ostr,"#\tmake -f %s run%s\n#\n",namebuf,id);
+  fprintf(ostr,"# ir%s/i%s.dat\n",id,id);
+  fprintf(ostr,"ir%s/i%s.dat:\n",id,id);
+  fprintf(ostr,"\tcp -p GalaxyModels GalaxyMethods ir%s\n",id);
+  fprintf(ostr,"\t(cd ir%s; $(MAKE) -f GalaxyModels bdh_01_64k OUT=i%sa.dat SEED=42493)\n",id,id);
+  fprintf(ostr,"\t(cd ir%s; $(MAKE) -f GalaxyModels bdh_01_64k OUT=i%sb.dat SEED=78379)\n",id,id);
+  fprintf(ostr,"\tkepsnap out=ir%s/orbit.dat mass1=1.25 mass2=1.25 \\\n",id);
+  count=strchr(titlebuf,'r');
+  count+=3;
+  rperi=atof(count);
+  rperi/=16.;
+  fprintf(ostr,"\t\tr_peri=%f t_peri=2.0 eccent=1.0 nsteps=64k\n",rperi);
+  getpars(NULL,NULL,spin1,spin2,NULL,NULL,NULL, NULL,NULL, NULL, NULL, NULL, NULL);
+  fprintf(ostr,"\t(snaprotate in=ir%s/i%sa.dat out=- thetax=%.1f thetaz=%.1f; \\\n",id,id,racosD(spin1[2]),ratan2D(spin1[0],spin1[1]));
+  fprintf(ostr,"\t snaprotate in=ir%s/i%sb.dat out=- thetax=%.1f thetaz=%.1f) > tmp01.dat\n", id,id,racosD(spin2[2]),ratan2D(spin2[0],spin2[1]));
+  fprintf(ostr,"\tsnapcons in=tmp01.dat out=ir%s/i%s.dat frame=ir%s/orbit.dat \\\n",id,id,id);
+  fprintf(ostr,"\t\tnbody=128k produce=Position,Velocity,Mass,BodyType\n");
+  fprintf(ostr,"\tsnapcons in=tmp01.dat out=- \\\n");
+  fprintf(ostr,"\t\tnbody=128k produce=Position,Velocity,Mass,BodyType | \\\n");
+  fprintf(ostr,"\t    snapset - ir%s/jhat.dat require=Position,Velocity,Mass,BodyType \\\n",id);
+  fprintf(ostr,"\t\tproduce=AuxVec passall=false \\\n");
+  fprintf(ostr,"\t\tauxvx=\"type==0104 ? jx/jtot : 0\" \\\n");
+  fprintf(ostr,"\t\tauxvy=\"type==0104 ? jy/jtot : 0\" \\\n");
+  fprintf(ostr,"\t\tauxvz=\"type==0104 ? jz/jtot : 0\" \n");
+  fprintf(ostr,"\trm -f tmp01.dat\n\n\n");
+  fprintf(ostr,"# run%s\n",id);
+  fprintf(ostr,"run%sa: ir%s/i%s.dat\n",id,id,id);
+  fprintf(ostr,"\ttreecode in=ir%s/i%s.dat out=ir%s/ir%s_%%04x.dat \\\n",id,id,id,id);
+  fprintf(ostr,"\t\tdtime=1/256 eps=0.0075 usequad=true tstop=8.0 \\\n");
+  fprintf(ostr,"\t\toutputs=Position,Velocity,Potential dtout=1/16 \\\n");
+  fprintf(ostr,"\t\tsave=ir%s/ir%sa_state%%1d.dat > ir%s/ir%sa.log\n",id,id,id,id);
+  fclose(ostr);
 }

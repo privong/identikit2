@@ -53,7 +53,8 @@ string defv[] = {		";Fit Identakit model to XYVz data.",
     "xwidth=250.0",		";Image X,Y width in kpc",
     "vwidth=500.0",		";Image V width in km/sec",
     "script=",			";String of keyboard commands",
-    "VERSION=2.2" VARIANT,	";Joshua Barnes  11 June 2012.",
+    "VERSION=2.2mod" VARIANT,	";Joshua Barnes  11 June 2012.",
+				";(modified George Privon, 16 August 2012).",
 				";This program is free software; you can",
 				";redistribute it under certain conditions.",
 				";This program comes with NO WARRANTY.",
@@ -1282,6 +1283,11 @@ void mousemove(int x, int y)
   if (actpars != -1) {
     idk.par[actpars][0] += (x - xlast) / ((real) pansize);
     idk.par[actpars][1] += (y - ylast) / ((real) pansize);
+    if (actpars==SCALE) {
+      // we're changing the scale, correct the xy offset
+      idk.par[XYOFF][0] *= rpow(10.0,idk.par[actpars][1]-(idk.par[actpars][1]-(y - ylast) / ((real) pansize)));
+      idk.par[XYOFF][1] *= rpow(10.0,idk.par[actpars][1]-(idk.par[actpars][1]-(y - ylast) / ((real) pansize)));
+    }
     parset[actpars] = TRUE;
     xlast = x;
     ylast = y;

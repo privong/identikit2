@@ -1,0 +1,390 @@
+# ~/coll/idkit2/export/InitialData: make models for IDKIT experiments.
+
+########################################################################
+# Runs 121 - 128: high-resolution runs using galaxy model 02, for
+# comparison with randmerge experiments and general model matching.
+# These runs use biased disks; jhat12X includes the weight factors.
+
+r121/i121.dat:
+	mkdir -p r121
+	$(MAKE) -f InitialData testdisks_02a OUT=r121/i121a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r121/i121b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r121/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.0625 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r121/i121[ab].dat | csf - - exclude=History | \
+	  snapcons - r121/i121.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r121/orbit.dat
+
+r122/i122.dat:
+	mkdir -p r122
+	$(MAKE) -f InitialData testdisks_02a OUT=r122/i122a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r122/i122b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r122/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.1250 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r122/i122[ab].dat | csf - - exclude=History | \
+	  snapcons - r122/i122.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r122/orbit.dat
+
+r123/i123.dat:
+	mkdir -p r123
+	$(MAKE) -f InitialData testdisks_02a OUT=r123/i123a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r123/i123b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r123/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.1875 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r123/i123[ab].dat | csf - - exclude=History | \
+	  snapcons - r123/i123.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r123/orbit.dat
+
+r124/i124.dat:
+	mkdir -p r124
+	$(MAKE) -f InitialData testdisks_02a OUT=r124/i124a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r124/i124b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r124/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.2500 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r124/i124[ab].dat | csf - - exclude=History | \
+	  snapcons - r124/i124.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r124/orbit.dat
+
+r125/i125.dat:
+	mkdir -p r125
+	$(MAKE) -f InitialData testdisks_02a OUT=r125/i125a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r125/i125b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r125/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.3125 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r125/i125[ab].dat | csf - - exclude=History | \
+	  snapcons - r125/i125.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r125/orbit.dat
+
+r126/i126.dat:
+	mkdir -p r126
+	$(MAKE) -f InitialData testdisks_02a OUT=r126/i126a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r126/i126b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r126/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.3750 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r126/i126[ab].dat | csf - - exclude=History | \
+	  snapcons - r126/i126.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r126/orbit.dat
+
+r127/i127.dat:
+	mkdir -p r127
+	$(MAKE) -f InitialData testdisks_02a OUT=r127/i127a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r127/i127b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r127/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.4375 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r127/i127[ab].dat | csf - - exclude=History | \
+	  snapcons - r127/i127.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r127/orbit.dat
+
+r128/i128.dat:
+	mkdir -p r128
+	$(MAKE) -f InitialData testdisks_02a OUT=r128/i128a.dat \
+	        NDISK=256k SEED=12101
+	$(MAKE) -f InitialData testdisks_02a OUT=r128/i128b.dat \
+	        NDISK=256k SEED=12102
+	kepsnap out=r128/orbit.dat mass1=1.25 mass2=1.25 \
+	         r_peri=0.5000 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r128/i128[ab].dat | csf - - exclude=History | \
+	  snapcons - r128/i128.dat produce=Position,Velocity,Mass \
+	           nbody=672k frame=r128/orbit.dat
+
+########################################################################
+
+jhat12X.dat: r121/i121a.dat r121/i121b.dat
+	cat r121/i121[ab].dat | csf - - exclude=History | \
+	  snapcons - - nbody=672k | \
+	    snapset - out=jhat12X.dat passall=false \
+	            require=Position,Velocity,Mass produce=AuxVec,Aux \
+	            auxvx="m==0 ? jx/jtot : 0" \
+	            auxvy="m==0 ? jy/jtot : 0" \
+	            auxvz="m==0 ? jz/jtot : 0" \
+	            aux="8.0 / MAX(1.0, rsqr(12.0 * r))"
+
+########################################################################
+# Runs 131 - 138: unequal-mass experiments using models 02 and 04,
+# for comparison with randmerge experiments and general model matching.
+# These runs use biased disks; jhat13X includes the weight factors.
+
+r131/i131.dat:
+	mkdir -p r131
+	$(MAKE) -f InitialData testdisks_02a OUT=r131/i131a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r131/i131b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r131/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.0625 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r131/i131[ab].dat | csf - - exclude=History | \
+	  snapcons - r131/i131.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r131/orbit.dat
+
+r132/i132.dat:
+	mkdir -p r132
+	$(MAKE) -f InitialData testdisks_02a OUT=r132/i132a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r132/i132b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r132/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.1250 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r132/i132[ab].dat | csf - - exclude=History | \
+	  snapcons - r132/i132.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r132/orbit.dat
+
+r133/i133.dat:
+	mkdir -p r133
+	$(MAKE) -f InitialData testdisks_02a OUT=r133/i133a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r133/i133b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r133/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.1875 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r133/i133[ab].dat | csf - - exclude=History | \
+	  snapcons - r133/i133.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r133/orbit.dat
+
+r134/i134.dat:
+	mkdir -p r134
+	$(MAKE) -f InitialData testdisks_02a OUT=r134/i134a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r134/i134b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r134/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.2500 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r134/i134[ab].dat | csf - - exclude=History | \
+	  snapcons - r134/i134.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r134/orbit.dat
+
+r135/i135.dat:
+	mkdir -p r135
+	$(MAKE) -f InitialData testdisks_02a OUT=r135/i135a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r135/i135b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r135/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.3125 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r135/i135[ab].dat | csf - - exclude=History | \
+	  snapcons - r135/i135.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r135/orbit.dat
+
+r136/i136.dat:
+	mkdir -p r136
+	$(MAKE) -f InitialData testdisks_02a OUT=r136/i136a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r136/i136b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r136/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.3750 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r136/i136[ab].dat | csf - - exclude=History | \
+	  snapcons - r136/i136.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r136/orbit.dat
+
+r137/i137.dat:
+	mkdir -p r137
+	$(MAKE) -f InitialData testdisks_02a OUT=r137/i137a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r137/i137b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r137/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.4375 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r137/i137[ab].dat | csf - - exclude=History | \
+	  snapcons - r137/i137.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r137/orbit.dat
+
+r138/i138.dat:
+	mkdir -p r138
+	$(MAKE) -f InitialData testdisks_02a OUT=r138/i138a.dat \
+	        NDISK=256k SEED=13101
+	$(MAKE) -f InitialData testdisks_04a OUT=r138/i138b.dat \
+	        NDISK=128k SEED=13102
+	kepsnap out=r138/orbit.dat mass1=1.25 mass2=0.625 \
+	         r_peri=0.5000 eccent=1.0 t_peri=2.0 nsteps=32k
+	cat r138/i138[ab].dat | csf - - exclude=History | \
+	  snapcons - r138/i138.dat produce=Position,Velocity,Mass \
+	           nbody=584k frame=r138/orbit.dat
+
+########################################################################
+
+jhat13X.dat: r131/i131a.dat r131/i131b.dat
+	cat r131/i131[ab].dat | csf - - exclude=History | \
+	  snapcons - - nbody=584k | \
+	    snapset - out=jhat13X.dat passall=false \
+	            require=Position,Velocity,Mass produce=AuxVec,Aux \
+	            auxvx="m==0 ? jx/jtot : 0" \
+	            auxvy="m==0 ? jy/jtot : 0" \
+	            auxvz="m==0 ? jz/jtot : 0" \
+	            aux="8.0 / MAX(1.0, rsqr((i<344064?12.0:16.97) * r))"
+
+########################################################################
+# Galaxy model 02: high-resolution model (eps = 0.0075) with NFW halo. #
+#                                                                      #
+# Bulge:  M_b = 0.0625		a = 0.02		gamma = 1.0    #
+# Disk:   M_d = 0.1875		alpha = 12.0		z0 = 0.0075    #
+# Halo:   M_h = 1.0		a = 0.25		b = 0.98015    #
+########################################################################
+
+bulge_02.dat:
+	gammagsp - gamma=1.0 mtot=0.0625 a=0.02 | \
+	    gsptrun - bulge_02.dat rtrun=4.0
+
+disk_02.dat:
+	expdgsp disk_02.dat mtot=0.1875 alpha=12.0
+
+halo_02.dat:
+	halogsp halo_02.dat m_a=0.16 a=0.25 b=0.98015 taper=sw \
+	        rrange=1/16384:4
+
+mass_02.dat: bulge_02.dat disk_02.dat halo_02.dat
+	gspadd bulge_02.dat,disk_02.dat,halo_02.dat mass_02.dat
+
+# Smooth for EPS = 0.0075 with parameters used in randmerge/GalaxyModels.
+
+mass_02s.dat: mass_02.dat
+	gspsmooth mass_02.dat mass_02s.dat eps=0.0115 kappa=1.975
+
+########################################################################
+# testdisks_02: build galaxy model with all possible disks.  Note: the
+# number of "disk" particles is (2/3) * NDISK; the inner 1/3 is excluded.
+
+testdisks_02: mass_02s.dat
+	$(MAKE) -f InitialData spheroid_02 OUT=tmp0.dat NSPHR=40k SEED=$(SEED)
+	gspdisk mass_02s.dat tmp1.dat mdisk=0.0001 alpha=12.0 z0=0.0001 \
+	        rcut=0.5 ndisk=$(NDISK) seed=$(SEED) zerocm=f > /dev/null
+	makesnap - shape=shell nbody=$(NDISK) seed=$(SEED) | \
+	  snapset - tmp2.dat produce=AuxVec \
+	          auxvx="racos(z)" auxvy="ratan2(x,y)"
+	(cat tmp2.dat ; csf tmp1.dat - exclude=History) | \
+	  snapcollect - tmp3.dat
+	snapset tmp3.dat tmp4.dat m=0 \
+	        x=x \
+	        y="y*rcos(auxvx) + z*rsin(auxvx)" \
+	        z="z*rcos(auxvx) - y*rsin(auxvx)" \
+	        vx=vx \
+	        vy="vy*rcos(auxvx) + vz*rsin(auxvx)" \
+	        vz="vz*rcos(auxvx) - vy*rsin(auxvx)"
+	snapset tmp4.dat tmp5.dat \
+	        x="x*rcos(auxvy) + y*rsin(auxvy)" \
+	        y="y*rcos(auxvy) - x*rsin(auxvy)" \
+	        z=z \
+	        vx="vx*rcos(auxvy) + vy*rsin(auxvy)" \
+	        vy="vy*rcos(auxvy) - vx*rsin(auxvy)" \
+	        vz=vz
+	snapsift tmp5.dat tmp6.dat sieve="i >= n/3"
+	snapstack tmp0.dat tmp6.dat $(OUT) produce=Position,Velocity,Mass
+	rm -f tmp?.dat
+
+spheroid_02: mass_02.dat mass_02s.dat
+	gsprealize mass_02.dat $(OUT) mass_02s.dat \
+	           nbody=$(NSPHR) zerocm=f seed=$(SEED)
+
+########################################################################
+# testdisks_02a: build galaxy model with all possible disks.  The radial
+# mass distribution is biased (R^2 Exp[-alpha R]) to improve sampling in
+# the outer regions.
+
+testdisks_02a: mass_02s.dat
+	$(MAKE) -f InitialData spheroid_02a \
+	        OUT=tmp0.dat NSPHR=80k SEED=$(SEED)
+	gsptestdisk mass_02s.dat tmp1.dat model=2 alpha=12.0 \
+	            rcut=1.0 ndisk=$(NDISK) seed=$(SEED) > /dev/null
+	makesnap - shape=shell nbody=$(NDISK) seed=$(SEED) | \
+	  snapset - tmp2.dat produce=AuxVec \
+	          auxvx="racos(z)" auxvy="ratan2(x,y)"
+	(cat tmp2.dat ; csf tmp1.dat - exclude=History) | \
+	  snapcollect - tmp3.dat
+	snapset tmp3.dat tmp4.dat m=0 \
+	        x=x \
+	        y="y*rcos(auxvx) + z*rsin(auxvx)" \
+	        z="z*rcos(auxvx) - y*rsin(auxvx)" \
+	        vx=vx \
+	        vy="vy*rcos(auxvx) + vz*rsin(auxvx)" \
+	        vz="vz*rcos(auxvx) - vy*rsin(auxvx)"
+	snapset tmp4.dat tmp5.dat \
+	        x="x*rcos(auxvy) + y*rsin(auxvy)" \
+	        y="y*rcos(auxvy) - x*rsin(auxvy)" \
+	        z=z \
+	        vx="vx*rcos(auxvy) + vy*rsin(auxvy)" \
+	        vy="vy*rcos(auxvy) - vx*rsin(auxvy)" \
+	        vz=vz
+	snapstack tmp0.dat tmp5.dat $(OUT) produce=Position,Velocity,Mass
+	rm -f tmp?.dat
+
+spheroid_02a: mass_02.dat mass_02s.dat
+	gsprealize mass_02.dat - mass_02s.dat \
+	           nbody=$(NSPHR) zerocm=f seed=$(SEED) | \
+	  snapset - $(OUT) m="1.25 / n"
+
+########################################################################
+# Galaxy model 04: half-mass version of model 02.                      #
+#                                                                      #
+# Bulge:  M_b = 0.03125		a = 0.01414214		gamma = 1.0    #
+# Disk:   M_d = 0.09375		alpha = 16.97056	z0 = 0.0075    #
+# Halo:   M_h = 0.5		a = 0.1767767		b = 0.69307    #
+########################################################################
+
+bulge_04.dat:
+	gammagsp - gamma=1.0 mtot=0.03125 a=0.01414214 | \
+	    gsptrun - bulge_04.dat rtrun=4.0
+
+disk_04.dat:
+	expdgsp disk_04.dat mtot=0.09375 alpha=16.97056
+
+halo_04.dat:
+	halogsp halo_04.dat m_a=0.08 a=0.1767767 b=0.69307 taper=sw \
+	        rrange=1/16384:4
+
+mass_04.dat: bulge_04.dat disk_04.dat halo_04.dat
+	gspadd bulge_04.dat,disk_04.dat,halo_04.dat mass_04.dat
+
+# Smooth for EPS = 0.0075 with parameters used in randmerge/GalaxyModels.
+
+mass_04s.dat: mass_04.dat
+	gspsmooth mass_04.dat mass_04s.dat eps=0.0120 kappa=1.975
+
+########################################################################
+# testdisks_04a: build galaxy model with all possible disks.  The radial
+# mass distribution is biased (R^2 Exp[-alpha R]) to improve sampling in
+# the outer regions.
+
+testdisks_04a: mass_04s.dat
+	$(MAKE) -f InitialData spheroid_04a \
+	        OUT=tmp0.dat NSPHR=80k SEED=$(SEED)
+	gsptestdisk mass_04s.dat tmp1.dat model=2 alpha=16.97056 \
+	            rcut=1.0 ndisk=$(NDISK) seed=$(SEED) > /dev/null
+	makesnap - shape=shell nbody=$(NDISK) seed=$(SEED) | \
+	  snapset - tmp2.dat produce=AuxVec \
+	          auxvx="racos(z)" auxvy="ratan2(x,y)"
+	(cat tmp2.dat ; csf tmp1.dat - exclude=History) | \
+	  snapcollect - tmp3.dat
+	snapset tmp3.dat tmp4.dat m=0 \
+	        x=x \
+	        y="y*rcos(auxvx) + z*rsin(auxvx)" \
+	        z="z*rcos(auxvx) - y*rsin(auxvx)" \
+	        vx=vx \
+	        vy="vy*rcos(auxvx) + vz*rsin(auxvx)" \
+	        vz="vz*rcos(auxvx) - vy*rsin(auxvx)"
+	snapset tmp4.dat tmp5.dat \
+	        x="x*rcos(auxvy) + y*rsin(auxvy)" \
+	        y="y*rcos(auxvy) - x*rsin(auxvy)" \
+	        z=z \
+	        vx="vx*rcos(auxvy) + vy*rsin(auxvy)" \
+	        vy="vy*rcos(auxvy) - vx*rsin(auxvy)" \
+	        vz=vz
+	snapstack tmp0.dat tmp5.dat $(OUT) produce=Position,Velocity,Mass
+	rm -f tmp?.dat
+
+spheroid_04a: mass_04.dat mass_04s.dat
+	gsprealize mass_04.dat - mass_04s.dat \
+	           nbody=$(NSPHR) zerocm=f seed=$(SEED) | \
+	  snapset - $(OUT) m="0.625 / n"

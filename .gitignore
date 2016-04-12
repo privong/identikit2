@@ -1,0 +1,5 @@
+# ignore executable and variants
+idkit
+idkit_nw
+idkit_nn
+idkit_nwn

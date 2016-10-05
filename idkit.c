@@ -54,7 +54,7 @@ string defv[] = {		";Fit Identakit model to XYVz data.",
     "vwidth=500.0",		";Image V width in km/sec",
     "script=",			";String of keyboard commands",
     "VERSION=2.2mod" VARIANT,	";Joshua Barnes  11 June 2012.",
-				";(modified George Privon, 16 August 2012).",
+				";(modified George Privon, 05 October 2016).",
 				";This program is free software; you can",
 				";redistribute it under certain conditions.",
 				";This program comes with NO WARRANTY.",
@@ -386,9 +386,17 @@ void seldisks(void)
   block = 0;					// step thru body blocks
   for (bp = btab; bp < NthBody(btab, nbody); bp = NextBody(bp))
     if (AuxVec(bp)[0] == 0 && AuxVec(bp)[1] == 0 && AuxVec(bp)[2] == 0) {
+    #ifndef BULGELESS
       if (block % 2 == 0) {			// start of sphr block?
+    #else
+      if (block % 2 == 1) {			// start of sphr block?
+    #endif
 	block++;
+    #ifndef BULGELESS
 	cp = NthBody(vtab, block == 1 ? 0 : 1);
+    #else
+	cp = NthBody(vtab, block == 2 ? 0 : 1);
+    #endif
 	CLRV(cmpos);
 	CLRV(cmvel);
 	nc = 0;
@@ -401,9 +409,17 @@ void seldisks(void)
 	DIVVS(Vel(cp), cmvel, nc);
       }
     } else {
+    #ifndef BULGELESS
       if (block % 2 == 1)			// start of disk block?
+    #else
+      if (block % 2 == 0)			// start of disk block?
+    #endif
 	block++;
+    #ifndef BULGELESS
       if (dotvp(AuxVec(bp), block==2 ? spin1 : spin2) > 1 - disktol*Aux(bp)) {
+    #else
+      if (dotvp(AuxVec(bp), block==1 ? spin1 : spin2) > 1 - disktol*Aux(bp)) {
+    #endif
 	if (vp >= NthBody(vtab, maxview)) {
 	  sprintf(msgbuf, "#rtoo many bodies to view");
 	  break;
@@ -411,7 +427,11 @@ void seldisks(void)
 	SETV(Pos(vp), Pos(bp));
 	SETV(Vel(vp), Vel(bp));
 	vp = NextBody(vp);
+    #ifndef BULGELESS
 	(* (block==2 ? &nview1 : &nview2))++;
+    #else
+	(* (block==1 ? &nview1 : &nview2))++;
+    #endif
       }
     }
 }

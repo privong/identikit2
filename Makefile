@@ -12,6 +12,12 @@ idkit: idkit.c
 	  -DVARIANT=\"\" -L/usr/X11R6/lib -o idkit \
 	  idkit.c -lNBody -lClib -lglut -lGLU -lGL -lXmu -lX11 -lgsl -lm -lcblas
 
+idkit_bulgeless: idkit.c
+	$(ZCC) $(ZCCFLAGS) $(ZLDFLAGS) -D$(PRECISION) \
+      -DBULGELESS \
+	  -DVARIANT=\"\" -L/usr/X11R6/lib -o idkit_bulgeless \
+	  idkit.c -lNBody -lClib -lglut -lGLU -lGL -lXmu -lX11 -lgsl -lm -lcblas
+
 idkit_$(VAR): idkit.c
 	$(ZCC) $(ZCCFLAGS) $(ZLDFLAGS) -D$(PRECISION) $(OPTIONS) \
 	  -DVARIANT='" $(VAR)"' -L/usr/X11R6/lib -o idkit_$(VAR) \
